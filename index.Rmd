@@ -1,0 +1,616 @@
+---
+title: |
+  ![](www/header.png)
+output: 
+  bookdown::html_document2:
+    toc: true
+    toc_float: 
+       collapsed: false
+    toc_depth: 5
+    number_sections: false
+self_contained: yes
+css: styles.css
+cls: stylefile.csl
+bibliography: bibs.bib
+link-citations: true
+---
+
+```{r setup, message = F, warning = F, results = 'hide', echo = F}
+knitr::opts_chunk$set(echo = F, warning = F, message = F, fig.path = 'figure/')
+
+library(tbeptools)
+library(extrafont)
+library(tidyverse)
+library(reactable)
+library(gridExtra)
+library(grid)
+library(english)
+library(here)
+library(ggfx)
+# library(googlesheets4)
+
+source('R/funcs.R')
+
+loadfonts(device = 'pdf', quiet = T)
+font_import()
+if(Sys.info()[1] == 'Windows')
+  loadfonts(device = 'win', quiet = T)
+
+# # style file
+# styles <- readLines('https://raw.githubusercontent.com/tbep-tech/css-styling/master/styles.css')
+# writeLines(styles, 'styles.css')
+
+levs <- c('Old Tampa Bay', 'Hillsborough Bay', 'Middle Tampa Bay', 'Lower Tampa Bay')
+noaa_key <- Sys.getenv('NOAA_KEY')
+maxyr <- 2020
+fml <- NA
+
+# # get refs file
+# options(gargle_oauth_email = "mbeck@tbep.org")
+# path <- 'https://docs.google.com/spreadsheets/d/1VvEFlD_dRhp26HeOMz-CyZ5ZG9szMCziBBcniCwrUJg/edit?usp=sharing'
+# sht <- read_sheet(path)
+# sht <- as.data.frame(sht)
+# shtsv <- mutate_all(sht, as.character)
+# write.csv(shtsv, 'tbep-refs.csv', row.names = F)
+# bibs <- anlz_refs(sht)
+# writeLines(bibs, 'bibs.bib')
+
+data(wqdat)
+data(algdat)
+```
+
+<center><h1 style="font-size:180%">THE TAMPA BAY  NITROGEN MANAGEMENT CONSORTIUM PARTNERSHIP FOR PROGRESS<h1></center>
+
+<table>
+  <col width="100">
+  <tr>
+    <td>TO:</td>
+    <td>Adam Blalock, FDEP</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td>Daniel Blackman, US EPA Region 4</td>
+  </tr>
+  <tr>
+    <td>FROM:</td>
+    <td>Ed Sherwood, TBEP Executive Director (NMC Facilitator)</td>
+  </tr>
+  <tr>
+    <td>DATE:</td>
+    <td>`r Sys.Date()`</td>
+  </tr>
+  <tr>
+    <td>SUBJECT:</td>
+    <td>`r maxyr` Tampa Bay Nutrient Management Compliance Assessment Results</td>
+  </tr>
+  <tr>
+    <td><font size="2">cc:</font></td>
+    <td><font size="2">Ken Weaver, Jessica Mostyn, Ben Ralys, Kevin O’Donnell, Greg DeAngelo, Daryll Joyner (FDEP Tallahassee)</font></td>
+  </tr>
+    <tr>
+    <td></td>
+    <td><font size="2">Ramandeep Kaur, Vishwas Sathe, Amaury Betancourt, Anthony Annibali, Edgar Guerron-Orejuela (FDEP Tampa)</font></td>
+  </tr>
+    <tr>
+    <td></td>
+    <td><font size="2">Jeaneanne M. Gettle, Tony Able, Felicia Burks, Tom McGill (EPA Region 4)</font></td>
+  </tr>
+    <tr>
+    <td></td>
+    <td><font size="2">Jeff Greenwell, Santino Provenzano, Tony Janicki, Ray Pribble (TBNMC)</font></td>
+  </tr>
+    <tr>
+    <td></td>
+    <td><font size="2">Ed Sherwood, Maya Burke, Marcus Beck (TBEP)</font></td>
+  </tr>
+<table>
+<br></br>
+
+Source content: [here](https://github.com/tbep-tech/tbnmc-compliance-assessment)
+
+On behalf of the Tampa Bay Nitrogen Management Consortium, please find attached the 2020 update on water quality and seagrass resources in the Tampa Bay estuary. This update has been developed in accordance with the compliance assessment adopted through FDEP’s Tampa Bay Reasonable Assurance determination on December 22, 2010 ([Link to FDEP Final Order](https://tbep.org/nmc-final-order/)), FDEP’s subsequent approval of the 2017 RA Update ([Link to FDEP Acceptance Letter](https://drive.google.com/file/d/12xMbQSS6bSqhkzE2odNkOg94iNwRgE-N/view?usp=sharing)), and the federally-recognized TMDL for Tampa Bay ([Link to EPA TMDL](http://iaspub.epa.gov/waters10/attains_impaired_waters.tmdl_report?p_tmdl_id=1180&p_tribe=&p_report_type=)). The formal annual compliance assessment utilized by the Consortium is detailed in Section VIII.B of the Final 2009 Reasonable Assurance Addendum: Allocation and Assessment Report ([Link to Final Document](https://drive.google.com/file/d/10IjJAfcGFf007a5VdPXAUtUi4dx-cmsA/view)).
+
+During 2020, the COVID-19 pandemic precluded water quality data collection in April and May. As a result of this anomalous event, formal compliance determinations have not been made for any bay segments for 2020. All reported chlorophyll-a concentrations contained in this report are calculated without observations from the months noted above. In summary, chlorophyll-a concentrations in three of four major bay segments were below FDEP-approved numeric nutrient criteria thresholds with the exception being Old Tampa Bay. Elevated concentrations were observed in Old Tampa Bay between June and September, primarily due to annually recurring *Pyrodinium bahamense* blooms. 
+
+The approved chlorophyll-a thresholds were adopted as part of FDEP’s 2002 Reasonable Assurance determination for Tampa Bay, and, at that time, it was determined that Tampa Bay’s seagrass restoration goals could be achieved if annual chlorophyll-a concentrations remained below these thresholds. If a bay segment’s chlorophyll-a concentration remains above thresholds for 2 concurrent years, additional compliance assessment steps are required by the Consortium. This nutrient management strategy has been consistently used by the TBEP and Consortium in their Annual Decision Matrix and Assessment reports for Tampa Bay since 2009 when nitrogen load allocations for Tampa Bay were formalized [@tbep0521].
+
+In 2020, the Tampa Bay Estuary Program also updated the Habitat Master Plan [@tbep0720] for Tampa Bay, adopting a new goal of maintaining at least 40,000 acres of seagrass within the bay. This represents a slight increase from the previous goal of 38,000 acres adopted in the mid-1990s. The Southwest Florida Water Management District's (SWFWMD) 2020 baywide seagrass coverage estimate is 34,297 acres (Figure \@ref(fig:seagrass)). This latest estimate brings Tampa Bay’s total seagrass coverage below the 40,000 acre protection and recovery goal. Reductions in seagrass coverage were observed throughout the coastal waterbodies and estuaries mapped by the SWFWMD, and additional research is being conducted to understand these most recent trends. Notwithstanding these setbacks, implementation of the Consortium’s approved nutrient management strategy continues to be a successful, adaptive management approach to address nutrient loading to the Tampa Bay estuary. For the majority of Tampa Bay, water quality continues to be supportive of seagrass resources.
+
+Thank you again for your continued participation in the Consortium’s process.  Please contact Ed Sherwood ([esherwood@tbep.org](mailto:esherwood@tbep.org)) with any questions about the Consortium’s Annual Compliance Assessment.
+
+<center><h1 style="font-size:180%">`r maxyr` Tampa Bay Estuary Nutrient Management Compliance Assessment</h1></center>
+
+On December 22, 2010, then FDEP Secretary Drew signed a Final Order ([FDEP 2010](http://www.tbeptech.org/attachments/article/50/FDEP_Final_Order_2009_RA_Addendum.pdf)) accepting and approving the 2009 Reasonable Assurance (RA; [TBNMC 2010](https://drive.google.com/file/d/10IjJAfcGFf007a5VdPXAUtUi4dx-cmsA/view?usp=drivesdk)) Addendum for the Tampa Bay estuary. The final order found that the Nitrogen Management Consortium (NMC) provided FDEP reasonable assurance that: 1) completed and proposed management actions in the 2009 RA Addendum will result in the continued attainment of the estuarine nutrient criteria within Tampa Bay, and 2) compliance with the allocations in the 2009 RA Addendum ensures reasonable progress towards continued attainment of the estuarine nutrient criteria and associated Class III designated uses. Furthermore, the FDEP finalized a WQBEL for the Tampa Bay estuary in accordance with the allocations developed under the 2009 RA Addendum in November 2010. The Consortium completed subsequent RA Updates in  [2012](https://tbep.org/reasonable-assurance-plans-updates-2012/) and [2017](https://tbep.org/reasonable-assurance-plans-updates-2017/) maintaining allocations and expanding upon projects originally defined in the [2002 RA Submittal](https://tbep.org/reasonable-assurance-plans-updates-2002/), [2007 RA Update](https://tbep.org/reasonable-assurance-plans-updates-2007/) and [2009 RA Addendum](https://drive.google.com/file/d/10IjJAfcGFf007a5VdPXAUtUi4dx-cmsA/view?usp=drivesdk).
+
+As part of the compliance assessment stipulated under the 2009 RA Addendum, the NMC committed to annually assess the water quality and seagrass conditions within Tampa Bay and report these to FDEP and EPA. The Consortium’s assessment responsibilities are shown in green in Figure \@ref(fig:decision). It should be noted that the Consortium’s reasonable assurance assessment strategy begins with the observation of water quality conditions in the bay for a particular year. As is recommended in numerous EPA guidance documents for the development of numeric nutrient criteria, the Consortium’s assessment strategy attempts to apply a stressor-response rationale for the determination of nitrogen load allocation reasonable assurance in the estuary.
+
+```{r decision, fig.align = 'center', out.width = '70%', fig.cap='Nitrogen Management Consortium decision framework to assess future reasonable assurance of adopted allocations. Actions and steps to be conducted by the NMC are shown in the circles and diamonds. Steps, decision points, and actions are outlined in Table \\@ref(tab:steps) (below) according to the Roman numerals listed in the figure.'}
+knitr::include_graphics(here::here('www/decisionframework.png'))
+```
+
+The framework is applied on a bay-segment basis, and is predicated on assessing annual attainment of the bay segment chlorophyll-a concentration threshold as the initial step. If the bay segment-specific chlorophyll-a threshold is met, the Consortium annually reports the results to FDEP and EPA and additional assessment steps are not required by the Consortium (by June of the following year). If annual average chlorophyll-a thresholds are not met in one or more bay segments, additional assessment steps are required by the Consortium as noted in the framework and assessment process (Figure \@ref(fig:decision), Table \@ref(tab:steps)).
+
+Regardless of the assessment results, the Consortium will annually report (by June of the following year) whether the bay segment specific chlorophyll-a thresholds are met using the Environmental Protection Commission of Hillsborough County (EPCHC) dataset, as traditionally assessed using the “Decision Matrix” management strategy developed by the TBEP [@tbep0400] and will deliver this to FDEP and EPA (Figure \@ref(fig:decision); NMC Action 1 in the Framework). If an annual, individual exceedence of a bay segment chlorophyll-a threshold is observed, an addendum report outlining the anomalous event(s) or data which influenced the bay segment chlorophyll-a exceedence will be delivered to FDEP and EPA upon review by NMC participants by September of the following year (Figure \@ref(fig:decision); NMC Action 2 in the Framework). An evaluation of the bay segment assimilative capacity (i.e. revision to the federally-recognized TMDL) is formally considered (if not already considered by the NMC) when bay segment chlorophyll-a thresholds are not met in 2 concurrent years, and hydrologically normalized loads for those years meet the federally-recognized TMDL (Figure \@ref(fig:decision); NMC Action 3 in the Framework). Alternatively, when bay segment chlorophyll-a thresholds are not met in 2 concurrent years and hydrologically normalized loads for those years also do not meet the federally-recognized TMDL, the Consortium will deliver a full loading report to FDEP and EPA comparing the observed, combined entity/source annual or multiple year loadings to the sources’ 5-yr annual average allocation by September of the following year. This report will identify any exceedences among combined entity/source load categories after taking into consideration “set allocation” sources and hydrologically-normalized sources, and if necessary, whether exceedences were observed for individual MS4 or unpermitted (LA) sources (Figure \@ref(fig:decision); NMC Action 4 in the Framework). It is noted that FDEP will independently assess individual entities for compliance with their allocations.
+
+<table border="1">
+  <caption>(\#tab:steps) Assessment steps linked to the Nitrogen Management Consortium’s decision framework, as depicted in Figure \@ref(fig:decision).</caption>
+  <col width = "600">
+  <col width = "100">
+  <col width = "200">
+  <tr>
+    <td><b>Assessment Step</b></td>
+    <td style="text-align:center"><b>Result</b></td>
+    <td style="text-align:center"><b>Action</b></td>
+  </tr>
+  <tr>
+    <td rowspan="2"><b>I.</b> Determine annual bay segment specific chlorophyll-a FDEP threshold attainment as traditionally assessed using the Decision Matrix management strategy developed by the TBEP [@tbep0400].</td>
+    <td style="text-align:center"><b>Yes</b></td>
+    <td style="text-align:center"><b>NMC Action 1</b></td>
+  </tr>
+  <tr>
+    <td style="text-align:center"><b>No</b></td>
+    <td style="text-align:center"><b>NMC Action 1</b></td>
+  </tr>
+  <tr>
+    <td rowspan="2"><b>II.</b> Review data and determine if an anomalous event(s) influenced non-attainment of the bay segment specific chlorophyll-a threshold.</td>
+    <td style="text-align:center"><b>Yes</b></td>
+    <td style="text-align:center"><b>NMC Action 2</b></td>
+  </tr>
+  <tr>
+    <td style="text-align:center"><b>No</b></td>
+    <td style="text-align:center"><b>Go to III</b></td>
+  </tr>
+  <tr>
+    <td rowspan="2"><b>III.</b> Determine if the chlorophyll-a thresholds have been exceeded for <2 consecutive years.</td>
+    <td style="text-align:center"><b>Yes</b></td>
+    <td style="text-align:center"><b>NMC Action 2</b></td>
+  </tr>
+  <tr>
+    <td style="text-align:center"><b>No</b></td>
+    <td style="text-align:center"><b>Go to IV</b></td>
+  </tr>
+  <tr>
+    <td rowspan="2"><b>IV.</b> Determine if the bay segment specific federally-recognized TMDL has been achieved using the hydrologically-adjusted compliance assessment outlined in NMC Decision Memo #11 (Appendix 2-11).</td>
+    <td style="text-align:center"><b>Yes</b></td>
+    <td style="text-align:center"><b>NMC Action 3</b></td>
+  </tr>
+  <tr>
+    <td style="text-align:center"><b>No</b></td>
+    <td style="text-align:center"><b>Go to V</b></td>
+  </tr>
+  <tr>
+  <td><b>V.</b> For a given year or for multiple years, compile and report entity-specific combined source loads in comparison to 5-yr annual average reasonable assurance allocation.</td>
+    <td style="text-align:center"><b>Compile & Report</b></td>
+    <td style="text-align:center"><b>NMC Action 4</b></td>
+  </tr>
+</table>
+<br></br>
+
+NMC actions outlined in Figure \@ref(fig:decision) and Table \@ref(tab:steps) performed during RA Implementation Period (2017-2021) are as follows:
+
+<table>
+  <col width="100">
+  <tr>
+    <td valign="top">NMC Action 1 -</td>
+    <td>A report assessing attainment of bay segment specific chlorophyll-a thresholds using the EPCHC dataset, as traditionally assessed using the Decision Matrix management strategy developed by the TBEP [@tbep0400] will be delivered to FDEP and EPA (this report).</td>
+  </tr>
+  <tr>
+    <td valign="top">NMC Action 2 -</td>
+    <td>A report of the anomalous event(s) or data which influenced the bay segment chlorophyll-a exceedence will be delivered to FDEP and EPA, upon review by NMC participants (this report).</td>
+  </tr>
+  <tr>
+    <td valign="top">NMC Action 3 -</td>
+    <td>Consider re-evaluation of the bay segment assimilative capacity based on nonattainment of bay segment chlorophyll-a threshold while meeting federally-recognized TMDL.</td>
+  </tr>
+  <tr>
+    <td valign="top">NMC Action 4 -</td>
+    <td>If federally-recognized TMDL not achieved, compile results of hydrologic evaluation for FDEP’s review and identify potential further actions needed to achieve reasonable assurance for bay segment allocations. </td>
+  </tr>
+</table>
+
+<center><h1 style="font-size:180%">`r maxyr` Results Summary</h1></center>
+
+During 2020, the COVID-19 pandemic precluded water quality data collection in April and May. As a result of this anomalous event, compliance determinations have not been made for any bay segments. All reported chlorophyll-a concentrations are calculated without observations from the months noted above. Results from 2020 indicate that all RA bay segments, excluding Old Tampa Bay, met chlorophyll-a thresholds accepted by the FDEP to maintain FDEP Reasonable Assurance for Tampa Bay and to comply with the EPA TMDL (Figure \@ref(fig:thrplot)) and estuarine numeric nutrient criteria for Tampa Bay ([EPA Approval Letter Nov. 30, 2012](http://www.dep.state.fl.us/water/wqssp/nutrients/docs/new/epa_approval_letter_113012.pdf)). In Old Tampa Bay, chlorophyll-a concentrations were elevated in a poorly flushed region that has typically produced summertime blooms of *Pyrodinium bahamense* since 2009 (Figure \@ref(fig:sitemap); *Note that individual station exceedences are not considered in this RA compliance assessment*). This observation is reflected in the majority of summertime months with chlorophyll-a concentrations higher than long-term median values in Old Tampa Bay (Figure \@ref(fig:boxplot)). In response, the Consortium formed an Old Tampa Bay Working Group in early 2020 to prioritize additional investigations and future management actions that may alleviate the conditions fostering these summertime blooms. Additionally, the Consortium is proactively developing loading information for the 2018-2020 period to assess any anomalous loading conditions.
+
+The TBEP, in partnership with the Southwest Florida Water Management District, has previously developed an integrated ecosystem model to evaluate the net environmental benefits that may result from implementing various management actions in Old Tampa Bay including: reducing point sources, nonpoint sources, and causeway obstructions in Old Tampa Bay [@tbep1015]. Furthermore, the TBEP is funding research conducted by the Florida Fish and Wildlife Research Institute to improve understanding of the cell physiology and behavior of *Pyrodinium bahamense* and evaluate the potential for using shellfish to mitigate these algal blooms in Old Tampa Bay. Monthly chlorophyll-a conditions in Hillsborough Bay, Middle Tampa Bay, and Lower Tampa Bay were largely within or below median historic ranges during 2020 (Figure \@ref(fig:boxplot)). Finally, a water quality dashboard ([https://shiny.tbep.org/wq-dash](https://shiny.tbep.org/wq-dash)) was developed to synthesize the data, assess additional water quality metrics (phytoplankton counts), and inform Consortium participants and other resource managers on the status of water quality in Tampa Bay. The dashboard will allow for enhanced adaptive management response by the community in the future.
+
+Seagrasses remain relatively stable throughout much of Lower to Middle Tampa Bay; however, recent declines to the ephemeral seagrass beds in upper Tampa Bay were observed in 2020. Aerial photographs taken in December 2019 - January 2020 indicate that seagrass coverage decreased by 6,355 acres baywide over the 2018 estimate and have fallen below the TBEP recovery goal (Figure \@ref(fig:seagrass)). Seagrass acreage showed the greatest decreases in Old Tampa Bay (-4,041 acres) and Hillsborough Bay (-627 acres). Systemic reductions to seagrass coverage estimates were observed throughout the SWFWMD's mapped domain in 2020, and additional research is being pursued to understand the underlying mechanisms influencing these observations. The next SWFWMD seagrass coverage estimate will be developed from aerial photographs acquired over the winter 2021-22 period.
+
+Detailed results for the 2017-2021 RA implementation period are also provided in Tables \@ref(tab:OTBoutcome), \@ref(tab:HBoutcome), \@ref(tab:MTBoutcome), and \@ref(tab:LTBoutcome) for each bay segment. As of the 2020 reporting period, NMC Actions 2-5 are not necessary based upon observed water quality conditions within Tampa Bay, though additional work is being pursued by the TBEP and TBNMC to understand the most recent trends in seagrass coverage. Individual annual reports of the bay’s conditions from 2017 – 2020 can be found on the TBEP website, as specified in the following links [@tbep0118;@tbep0119;@tbep0120;@tbep0521]. A summary of historic attainment of the regulatory chlorophyll-a thresholds for each of the bay segments is depicted in Figure \@ref(fig:chlmat).
+
+Lastly, annual hydrologic conditions within two of four bay segments in `r maxyr` were estimated to exceed 1992-1994 levels. Therefore, hydrologic adjustments for evaluating compliance with individual entity load allocations/permitting targets should be applied for the Old Tampa Bay and Hillsborough Bay segments [@tbep0512;@tbep0316]. The estimated hydrologic loads for each bay segment relative to observed 1992-1994 levels are indicated in the table below. The associated compliance load adjustment factors (if applicable) are also specified. A tool to calculate the hydrologic estimates and adjustment factors by bay segment is now available online through an interactive dashboard (https://shiny.tbep.org/tbnmc_hydrologic_estimates/).
+
+```{r, eval = T}
+# get adjustment estimates
+hydroload <- anlz_hydroload(maxyr, noaa_key)
+
+# extra static content
+histest <- tibble::tibble(
+  `Bay Segment` = levs,
+  `1992 - 1994 Hydrology (95% Prediction Interval, million m3)` = c('383 - 548', '753-1110', '524-756', '312-402')
+  )
+
+# format for reactable
+totab <- hydroload %>%
+  left_join(histest, ., by = 'Bay Segment') %>%
+  select(-Year, -`Adjusted?`, -`Compliance Load`) %>%
+  mutate(`Bay Segment` = factor(`Bay Segment`, levels = levs)) %>%
+  arrange(`Bay Segment`)
+
+# reactable output
+tab <- reactable(totab,
+  defaultColDef = colDef(
+    format = colFormat(digits = 2, separators = TRUE),
+    resizable = T
+    )
+)
+
+tab
+```
+
+```{r thrplot, fig.cap = paste0('Historic chlorophyll-a annual averages for the four major bay segments of Tampa Bay. Annual averages in ', maxyr, ' were below the regulatory thresholds developed under the Tampa Nitrogen Management Consortium’s nutrient management strategy in three of four bay segments, excluding Old Tampa Bay (April, May data missing for 2020). Vertical grey bars indicate the the 2017-2021 Reasonable Assurance compliance assessment period Data source: EPCHC.'), fig.height = 9, fig.width = 12, fig.align = 'center'}
+  
+show_rathrplot <- function(epcdata, bay_segment = c('OTB', 'HB', 'MTB', 'LTB'), thr = c('chla', 'la'), trgs = NULL, yrrng = c(1975, 2019),
+                         family = NA, labelexp = TRUE, txtlab = TRUE, thrs = FALSE, partialyr = FALSE){
+
+
+  maxyr <- yrrng[2]
+
+  # default targets from data file
+  if(is.null(trgs))
+    trgs <- targets
+
+  # yrrng must be in ascending order
+  if(yrrng[1] >= yrrng[2])
+    stop('yrrng argument must be in ascending order, e.g., c(1975, 2019)')
+
+  # segment
+  bay_segment <- match.arg(bay_segment)
+
+  # wq to plot
+  thr <- match.arg(thr)
+
+  # colors
+  cols <- c("Annual Mean"="red", "Management Target"="blue", "+1 se (small exceedance)"="blue", "+2 se (large exceedance)"="blue")
+
+  # averages
+  aves <- anlz_avedat(epcdata, partialyr = partialyr)
+
+  # axis label
+  if(labelexp)
+    axlab <- dplyr::case_when(
+      thr == 'chla' ~ expression("Mean Ann. Chl-a ("~ mu * "g\u00B7L"^-1 *")"),
+      thr == 'la' ~ expression("Mean Ann. Light Att. (m  " ^-1 *")")
+    )
+  if(!labelexp)
+    axlab <- dplyr::case_when(
+      thr == 'chla' ~ "Mean Ann. Chl-a (ug/L)",
+      thr == 'la' ~ "Mean Ann. Light Atten. (m-1)"
+    )
+
+  # get lines to plot
+  toln <- trgs %>%
+    dplyr::filter(bay_segment %in% !!bay_segment)
+  trgnum <- toln %>% dplyr::pull(!!paste0(thr, '_target'))
+  smlnum <- toln %>% dplyr::pull(!!paste0(thr, '_smallex'))
+  thrnum <- toln %>% dplyr::pull(!!paste0(thr, '_thresh'))
+
+
+  # change label location if thrs is true
+  if(!thrs)
+    num <- trgnum
+  if(thrs)
+    num <- thrnum
+
+  # threshold label
+  if(labelexp)
+    trglab <- dplyr::case_when(
+      thr == 'chla' ~ paste(num, "~ mu * g%.%L^{-1}"),
+      thr == 'la' ~ paste(num, "~m","^{-1}")
+    )
+  if(!labelexp)
+    trglab <- dplyr::case_when(
+      thr == 'chla' ~ paste(num, "ug/L"),
+      thr == 'la' ~ paste(num, "m-1")
+    )
+
+  # bay segment plot title
+  ttl <- trgs %>%
+    dplyr::filter(bay_segment %in% !!bay_segment) %>%
+    dplyr::pull(name)
+
+  if(partialyr)
+    ttl <- paste0(ttl, '*')
+
+  # get data to plo
+  toplo <- aves$ann %>%
+    dplyr::filter(grepl(paste0('_', thr, '$'), var)) %>%
+    mutate(var = 'yval') %>%
+    dplyr::filter(bay_segment == !!bay_segment) %>%
+    dplyr::filter(yr >= yrrng[1] & yr <= yrrng[2]) %>%
+    tidyr::spread(var, val)
+
+  p <- ggplot(toplo) +
+    geom_rect(xmin = 2017, xmax = 2021, ymin = -Inf, ymax = Inf, fill = 'grey', alpha = 0.6) + 
+    geom_point(data = toplo, aes(x = yr, y = yval, colour = "Annual Mean"), size = 3) +
+    geom_line(data = toplo, aes(x = yr, y = yval, colour = "Annual Mean"), linetype = 'solid', size = 0.75) +
+    labs(y = axlab, title = ttl) +
+    scale_x_continuous(breaks = seq(1975, maxyr, by = 5)) +
+    theme(panel.grid.minor=element_blank(),
+          panel.grid.major=element_blank(),
+          plot.background = element_rect(fill = NA, color = NA),
+          legend.position = 'top',#c(0.85, 0.95),
+          legend.background = element_rect(fill=NA),
+          legend.key = element_rect(fill = '#ECECEC'),
+          legend.title = element_blank(),
+          axis.text.y = element_text(colour = 'black', size = 14),
+          axis.title = element_blank(),
+          plot.title = element_text(size = 22, colour = 'black'),
+          legend.text = element_text(size = 16, colour = 'black'),
+          axis.text.x = element_text(colour = 'black', angle = 0, size = 14, hjust = 0.5),
+          text = element_text(family)
+      )
+  
+  # all targets/thresholds
+  if(!thrs)
+    p <- p +
+      geom_hline(aes(yintercept = trgnum, colour = 'Management Target')) +
+      geom_hline(aes(yintercept = smlnum, colour = '+1 se (small exceedance)'), linetype = 'dashed') +
+      geom_hline(aes(yintercept = thrnum, colour = '+2 se (large exceedance)'), linetype = 'dotted') +
+      scale_colour_manual(values = cols, labels = factor(names(cols), levels = names(cols))) +
+      guides(colour = guide_legend(
+        override.aes = list(
+          shape = c(19, NA, NA, NA),
+          colour = cols,
+          linetype = c('solid', 'solid', 'dashed', 'dotted'),
+          size = c(0.75, 0.5, 0.5, 0.5)
+          )
+      ))
+
+  # thresholds only
+  if(thrs)
+    p <- p +
+      geom_hline(aes(yintercept = thrnum, colour = '+2 se (large exceedance)'), linetype = 'dotted') +
+      scale_colour_manual(values = cols[c(1, 4)], labels = factor(names(cols[c(1, 4)]), levels = names(cols[c(1, 4)]))) +
+      guides(colour = guide_legend(
+        override.aes = list(
+          shape = c(19, NA),
+          colour = cols[c(1, 4)],
+          linetype = c('solid', 'dotted'),
+          size = c(0.75, 0.5)
+        )
+      ))
+
+  if(txtlab & !thrs)
+    p <- p +
+      geom_text(aes(yrrng[1], num, label = trglab), parse = labelexp, hjust = 0.2, vjust = 1, family = family, colour = 'blue')
+
+  if(txtlab & thrs)
+    p <- p +
+      geom_text(aes(yrrng[1], max(toplo$yval), label = trglab), parse = labelexp, hjust = 0.2, vjust = 1, family = family, colour = 'blue')
+
+
+  if(partialyr)
+    p <- p +
+      labs(caption = paste0('*Incomplete data for ', max(yrrng), ' estimated by five year average'))
+
+  return(p)
+
+}
+
+yrrng <- c(1975, maxyr)
+p1 <- show_rathrplot(wqdat, bay_segment = "OTB", thr = "chla", yrrng = yrrng, family = fml, thrs = T)
+p1leg <- g_legend(p1)
+p1 <- p1 + theme(legend.position = 'none')
+p2 <- show_rathrplot(wqdat, bay_segment = "HB", thr = "chla", yrrng = yrrng, family = fml, thrs = T) + theme(legend.position = 'none')
+p3 <- show_rathrplot(wqdat, bay_segment = "MTB", thr = "chla", yrrng = yrrng, family = fml, thrs = T) + theme(legend.position = 'none')
+p4 <- show_rathrplot(wqdat, bay_segment = "LTB", thr = "chla", yrrng = yrrng, family = fml, thrs = T) + theme(legend.position = 'none')
+
+# align
+# Get the widths
+pA <- ggplot_gtable(ggplot_build(p1))
+pB <- ggplot_gtable(ggplot_build(p2))
+pC <- ggplot_gtable(ggplot_build(p3))
+pD <- ggplot_gtable(ggplot_build(p4))
+maxWidth = grid::unit.pmax(pA$widths[2:3], pB$widths[2:3], pD$widths[2:3], pD$widths[2:3])
+
+# Set the widths
+pA$widths[2:3] <- maxWidth
+pB$widths[2:3] <- maxWidth
+pC$widths[2:3] <- maxWidth
+pD$widths[2:3] <- maxWidth
+
+grid.arrange(
+  p1leg,
+  arrangeGrob(pA, pB, ncol = 2),
+  arrangeGrob(pC, pD, ncol = 2),
+  ncol = 1, heights = c(0.1, 1, 1)
+)
+```
+
+```{r sitemap, fig.cap = 'Map depicting individual station chlorophyll-a exceedences in Tampa Bay relative to FDEP regulatory thresholds for chlorophyll-a. *Note individual station exceedences do not indicate failed compliance at the bay segment scale.*', fig.align = 'center', fig.height=8, fig.width=5, out.width = "70%"}
+show_sitemap(wqdat, yrsel = maxyr, thrs = T)
+```
+
+```{r boxplot, fig.cap = paste0(maxyr, ' monthly chlorophyll-a bay segment means (red dots) compared to monthly distributions from 1972-', maxyr -  1, ' (box plots and black dots).  Boxes encompass the 25th and 75th percentiles, while whiskers bound the interquartile range. Dots beyond the whiskers represent outliers throughout the 1972-', maxyr -1, ' sample period. April, May data missing for 2020.'), fig.height = 9, fig.width = 12, fig.align = 'center'}
+yrrng <- c(1975, maxyr)
+txtcol <- 'black'
+thrthm <- theme(
+    plot.background = element_rect(fill = NA, color = NA),
+    axis.text.y = element_text(colour = txtcol, size = 12),
+    axis.title = element_blank(),
+    plot.title = element_text(size = 22, colour = txtcol),
+    legend.text = element_text(size = 16, colour = txtcol),
+    axis.text.x = element_text(size = 14, colour = txtcol, angle = 0, hjust = 0.5),
+    text = element_text(family = fml)
+  )
+
+p1 <- show_boxplot(wqdat, bay_segment = "OTB", yrrng = yrrng, yrsel = maxyr, family = fml) + thrthm
+p1leg <- g_legend(p1)
+p1 <- p1 + theme(legend.position = 'none')
+p2 <- show_boxplot(wqdat, bay_segment = "HB", yrrng = yrrng, yrsel = maxyr, family = fml) + thrthm + theme(legend.position = 'none')
+p3 <- show_boxplot(wqdat, bay_segment = "MTB", yrrng = yrrng, yrsel = maxyr, family = fml) + thrthm + theme(legend.position = 'none')
+p4 <- show_boxplot(wqdat, bay_segment = "LTB",  yrrng = yrrng, yrsel = maxyr, family = fml) + thrthm + theme(legend.position = 'none')
+
+# align
+# Get the widths
+pA <- ggplot_gtable(ggplot_build(p1))
+pB <- ggplot_gtable(ggplot_build(p2))
+pC <- ggplot_gtable(ggplot_build(p3))
+pD <- ggplot_gtable(ggplot_build(p4))
+maxWidth = grid::unit.pmax(pA$widths[2:3], pB$widths[2:3], pD$widths[2:3], pD$widths[2:3])
+
+# Set the widths
+pA$widths[2:3] <- maxWidth
+pB$widths[2:3] <- maxWidth
+pC$widths[2:3] <- maxWidth
+pD$widths[2:3] <- maxWidth
+
+grid.arrange(
+  p1leg,
+  arrangeGrob(pA, pB, ncol = 2),
+  arrangeGrob(pC, pD, ncol = 2),
+  ncol = 1, heights = c(0.1, 1, 1)
+)
+```
+
+```{r, results = 'hide'}
+##
+# data prep
+
+seagrassadd <- seagrass %>%
+  bind_rows(
+    tibble(
+      Year = c(2020L),
+      Acres = c(34297)
+    )
+  )
+
+# extra years for padding
+exyrs <- seq(1950, 1953)
+
+toplo <- tibble(
+  Year = c(exyrs, seq(1982, 2020))
+) %>%
+  left_join(seagrass, by = 'Year') %>%
+  mutate(
+    Acres = case_when(
+      Year == '2020' ~ 34297,
+      T ~ Acres
+    ),
+    Acres = Acres / 1000,
+    fll = case_when(
+      Year == '2020' ~ 'prelim',
+      T ~ 'historic'
+    )
+  )
+
+##
+# base ggplot
+
+# axis labels
+lbs <- toplo$Year
+lbs[lbs %in% exyrs[-1]] <- ''
+
+p <- ggplot(toplo, aes(x = factor(Year), y = Acres)) +
+  with_shadow(geom_bar(aes(fill = fll), stat = 'identity', colour = 'black', width = 1.3), sigma = 2.7, x_offset = 0, y_offset = 0) +
+  geom_segment(x = 0, xend = 2, y = 38, yend = 38, col = 'red', size = 2) +
+  geom_segment(x = 4, xend = 42, y = 38, yend = 38, col = 'red', size = 2) +
+  geom_segment(x = 42, xend = 44, y = 40, yend = 40, col = 'red', size = 2) +
+  annotate("text", label = "Seagrass Coverage Goal", x = 4, y = 40.5, color = 'red', size = 5, hjust = 0, family = fml) +
+  annotate('text', x = 43, y = 34.5, label = 'Provisional: 34,297 acres', angle = 90, hjust = 1, vjust = 0.4) + 
+  scale_x_discrete(breaks = lbs, labels = lbs, expand = c(0.04, 0.04)) +
+  scale_fill_manual(values = c('#00806E', 'grey')) +
+  scale_y_continuous(expand = c(0, 0), limits = c(0, 1.1 * max(toplo$Acres, na.rm = T))) +
+  # theme_bw() +
+  theme(
+    axis.line = element_line(),
+    panel.background = element_blank(),
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 6),
+    axis.title.x = element_blank(),
+    legend.position = 'none',
+    panel.grid.minor = element_blank(),
+    panel.grid.major = element_blank()
+  ) +
+  labs(
+    y = 'Seagrass Coverage (x1,000 acres)'
+  )
+
+
+
+##
+# top, bottom axis line breaks
+
+gt <- ggplotGrob(p)
+
+is_axisb <- which(gt$layout$name == "axis-b")
+is_axist <- which(gt$layout$name == "axis-t")
+is_axisl <- which(gt$layout$name == "axis-l")
+is_axisr <- which(gt$layout$name == "axis-r")
+
+axisb <- gt$grobs[[is_axisb]]
+xline <- axisb$children[[1]]
+
+# location of break, break type
+xline$y <- unit(rep(1, 4), "npc")
+xline$x <- unit(c(0, 0.06, 1, 0.105), "npc")
+xline$id <- c(1, 1, 2, 2)
+xline$arrow <- arrow(angle = 90, length = unit(0.07, 'inches'))
+
+axisb$children[[1]] <- xline
+axist <- xline
+axisl <- gt$grobs[[is_axisl]]
+
+gt$grobs[[is_axisb]] <- axisb
+gt$grobs[[is_axist]] <- axist
+gt$grobs[[is_axisr]] <-axisl$children[[1]]
+
+##
+# save plot
+
+png('figure/seagrasscov.png', height = 3.25, width = 6, res = 300, unit = 'in')
+grid.newpage(); grid.draw(gt)
+dev.off()
+```
+
+```{r seagrass, fig.align = 'center', out.width = '90%', fig.cap = 'Historic seagrass coverage estimates for Tampa Bay. The target coverage of 38,000 acres was changed to 40,000 acres in 2020 to reflect programmatic goals in the 2020 Habitat Master Plan Update (<a href="https://drive.google.com/file/d/1Hp0l_qtbxp1JxKJoGatdyuANSzQrpL0I/view?usp=drivesdk">TBEP #07-20</a>).  2020 coverage estimate is provisional. Data source: TBEP & SWFWMD.'}
+knitr::include_graphics('figure/seagrasscov.png')
+```
+
+```{r chlmat, fig.align = 'center', out.width = '30%', fig.cap = paste0('Attainment of adopted chlorophyll-a thresholds (1974 - ', maxyr, ') in the four major bay segments.  Green (yes) indicates that average annual chlorophyll-a thresholds were met; red (no) indicates that threshold levels were not met.  Grey line is the beginning of the Reasonable Assurance implementation period. Data source:  EPCHC.'), fig.height = 10, fig.width = 4}
+show_wqmatrix(wqdat, param = 'chla', yrrng = c(1975, maxyr), txtsz = 5, abbrev = T, family = fml) +
+  geom_hline(yintercept = 2016.5, size = 2, color = 'grey') +
+  theme(
+    plot.background = element_rect(fill = NA, color = NA),
+    axis.text.y = element_text(size = 14, colour = 'black'),
+    axis.text.x = element_text(size = 14, colour = 'black'),
+    plot.title = element_text(size = 22, colour = 'black'),
+    text = element_text(family = fml)
+  )
+```
+
+```{r results = 'asis'}
+ratabcap('OTB')
+ratab('OTB', maxyr, epcdata, outtxt1 = 'First, third, and fourth years (2017, 2019, 2020) above threshold, necessary for NMC Actions 2-5.', outtxt2 = 'Concurrent years with threshold exceedances occurred (2019, 2020), necessary for NMC actions 3-5.', outtxt3 = "Review data, check if anomalous events influenced exceedance.")
+```
+<br></br>
+
+```{r results = 'asis'}
+ratabcap('HB')
+ratab('HB', maxyr, epcdata)
+```
+<br></br>
+
+```{r, results = 'asis'}
+ratabcap('MTB')
+ratab('MTB', maxyr, epcdata)
+```
+<br></br>
+
+```{r results='asis'}
+ratabcap('LTB')
+ratab('LTB', maxyr, epcdata)
+```
+<br></br>
+
+<center><h1 style="font-size:180%">References</h1></center>
