@@ -42,7 +42,7 @@ if(Sys.info()[1] == 'Windows')
 
 levs <- c('Old Tampa Bay', 'Hillsborough Bay', 'Middle Tampa Bay', 'Lower Tampa Bay')
 noaa_key <- Sys.getenv('NOAA_KEY')
-maxyr <- 2020
+maxyr <- 2021
 fml <- NA
 
 # # get refs file
@@ -591,25 +591,25 @@ show_wqmatrix(wqdat, param = 'chla', yrrng = c(1975, maxyr), txtsz = 5, abbrev =
 
 ```{r results = 'asis'}
 ratabcap('OTB')
-ratab('OTB', maxyr, epcdata, outtxt1 = 'First, third, and fourth years (2017, 2019, 2020) above threshold, necessary for NMC Actions 2-5.', outtxt2 = 'Concurrent years with threshold exceedances occurred (2019, 2020), necessary for NMC actions 3-5.', outtxt3 = "Review data, check if anomalous events influenced exceedance.")
+ratab('OTB', maxyr, wqdat, outtxt1 = 'First, third, fourth, and fifth years (2017, 2019, 2020, 2021) above threshold, necessary for NMC Actions 2-5.', outtxt2 = 'Concurrent years with threshold exceedances occurred (2019, 2020, 2021), necessary for NMC actions 3-5.', outtxt3 = "Review data, check if anomalous events influenced exceedance.")
 ```
 <br></br>
 
 ```{r results = 'asis'}
 ratabcap('HB')
-ratab('HB', maxyr, epcdata)
+ratab('HB', maxyr, wqdat)
 ```
 <br></br>
 
 ```{r, results = 'asis'}
 ratabcap('MTB')
-ratab('MTB', maxyr, epcdata)
+ratab('MTB', maxyr, wqdat)
 ```
 <br></br>
 
 ```{r results='asis'}
 ratabcap('LTB')
-ratab('LTB', maxyr, epcdata)
+ratab('LTB', maxyr, wqdat)
 ```
 <br></br>
 
