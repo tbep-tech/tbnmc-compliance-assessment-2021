@@ -81,7 +81,7 @@ data(algdat)
   </tr>
   <tr>
     <td>SUBJECT:</td>
-    <td>`r maxyr` Tampa Bay Nutrient Management Compliance Assessment Results</td>
+    <td>`r maxyr` Tampa Bay Nutrient Management Compliance Assessment Results - DRAFT</td>
   </tr>
   <tr>
     <td><font size="2">cc:</font></td>
