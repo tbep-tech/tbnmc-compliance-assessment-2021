@@ -85,11 +85,11 @@ data(algdat)
   </tr>
   <tr>
     <td><font size="2">cc:</font></td>
-    <td><font size="2">Ken Weaver, Jessica Mostyn, Ben Ralys, Kevin O’Donnell, Greg DeAngelo, Daryll Joyner (FDEP Tallahassee)</font></td>
+    <td><font size="2">Ken Weaver, Jessica Mostyn, Ben Ralys, Kevin O’Donnell (FDEP Tallahassee)</font></td>
   </tr>
     <tr>
     <td></td>
-    <td><font size="2">Ramandeep Kaur, Vishwas Sathe, Amaury Betancourt, Anthony Annibali, Edgar Guerron-Orejuela (FDEP Tampa)</font></td>
+    <td><font size="2">Ramandeep Kaur, Vishwas Sathe, Amaury Betancourt, Anthony Annibali (FDEP Tampa)</font></td>
   </tr>
     <tr>
     <td></td>
